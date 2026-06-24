@@ -20,12 +20,27 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        // TODO: registry.addMapping(...) 으로 CORS 매핑을 채워보세요.
+        registry.addMapping("/**")
+                .allowedOriginPatterns(allowedOrigins.split(","))
+                .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
+                .allowedHeaders("*")
+                .allowCredentials(true)
+                .maxAge(3600);
     }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-        // TODO: CorsConfiguration을 구성하고 UrlBasedCorsConfigurationSource에 등록해서 반환하세요.
-        return new UrlBasedCorsConfigurationSource();
+        List<String> origins = Arrays.asList(allowedOrigins.split(","));
+
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOriginPatterns(origins);
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(true);
+        configuration.setMaxAge(3600L);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }
