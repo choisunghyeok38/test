@@ -1,0 +1,57 @@
+server:
+  forward-headers-strategy: native
+
+spring:
+  application:
+    name: api-server
+  datasource:
+    url: jdbc:mysql://localhost:3306/account_book?createDatabaseIfNotExist=true&serverTimezone=Asia/Seoul
+    username: root
+    password: ${DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope:
+              - email
+              - profile
+
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: 86400000
+
+springdoc:
+  api-docs:
+    path: /api/v1/api-docs
+  swagger-ui:
+    path: /api/v1/docs
+    operations-sorter: alpha
+
+openapi:
+  domain: ${DOMAIN}
+
+external-api:
+  fastapi:
+    base-url: ${FASTAPI_BASE_URL}
+    callback-secret: ${FASTAPI_CALLBACK_SECRET}
+  kosis:
+    api-key: ${KOSIS_API_KEY}
+    url: "https://kosis.kr/openapi/Param/statisticsParameterData.do?method=getList&apiKey=${external-api.kosis.api-key}&itmId=T150+&objL1=E1+&objL2=H+J+K+L+M+N+O+P+Q+S+T+U+&objL3=&objL4=&objL5=&objL6=&objL7=&objL8=&format=json&jsonVD=Y&prdSe=Q&newEstPrdCnt=1&prdInterval=1&outputFields=NM+UNIT_NM+PRD_DE+&orgId=101&tblId=DT_1L9U140"
+
+app:
+  oauth2:
+    success-redirect-url: ${OAUTH2_SUCCESS_REDIRECT_URL}
+
+cors:
+  allowed-origins: ${CORS_ALLOWED_ORIGINS}

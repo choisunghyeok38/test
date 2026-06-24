@@ -1,0 +1,30 @@
+server {
+    listen 80;
+    server_name ${DOMAIN};
+
+    location /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+    }
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+
+# 인증서 발급 전까지는 아래 443 블록을 주석 처리해두세요.
+# certbot으로 인증서 발급이 끝나면 주석을 해제하고 nginx를 재시작하세요.
+# server {
+#     listen 443 ssl;
+#     server_name ${DOMAIN};
+#
+#     ssl_certificate /etc/letsencrypt/live/${DOMAIN}/fullchain.pem;
+#     ssl_certificate_key /etc/letsencrypt/live/${DOMAIN}/privkey.pem;
+#
+#     location / {
+#         proxy_pass http://app:8080;
+#         proxy_set_header Host $host;
+#         proxy_set_header X-Real-IP $remote_addr;
+#         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+#         proxy_set_header X-Forwarded-Proto $scheme;
+#     }
+# }
